@@ -27,18 +27,32 @@ app.post("/message", (req, res) => {
     top_p: 1,
     frequency_penalty: 0,
     presence_penalty: 0,
-    max_tokens: 50,
+    max_tokens: 100,
   });
   console.log(response);
+  
+  let action = req.body.queryResult.action;
+  let queryText = req.body.queryResult.queryText;
 
-  response
+
+
+
+  if (action === 'input.unknown') {
+    response
     .then((data) => {
       const message = { message: data.data.choices[0].text };
       res.send(message);
     })
     .catch((err) => {
       res.send(err);
-    });
+    }); 
+  }
+  else {
+    const fulfillmentText = "No handler";
+    res.send(fulfillmentText);
+}
+
+  
 });
 
 app.listen(3000, () => console.log("Listening on port 3000"));
